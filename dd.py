@@ -18,12 +18,26 @@ def check_error(seq):
         return True
     return False
 
-def dd():
+def dd(seq, fix_before=[], fix_after=[]):
     """ 
     Implements the linear, recursive delta debugging.
     Note that the function signature is intentionally incomplete
     (i.e., you need to provide arguments yourself)
     """
+    if len(seq) == 1:
+        return seq
+
+    mid = math.floor(len(seq) / 2)
+    left = seq[:mid]
+    right = seq[mid:]
+
+    if check_error(fix_before + left + fix_after):
+        return dd(left, fix_before, fix_after)
+    elif check_error(fix_before + right + fix_after):
+        return dd(right, fix_before, fix_after)
+    else:
+        return dd(left, fix_before, right + fix_after) + \
+        dd(right, fix_before + left, fix_after)
 
 if __name__ == '__main__':
     seq = read_input("fail.txt")
